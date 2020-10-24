@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server-lambda')
+const shortid = require("shortid");
 
 const faunadb = require('faunadb'),
   q = faunadb.query;
@@ -6,7 +7,7 @@ const faunadb = require('faunadb'),
 const typeDefs = gql`
   type Query {
     hello: String
-    getLolly: Lolly
+    getLolly(lollyPath: String!): Lolly
   }
   type Lolly {
     id: ID!
@@ -16,19 +17,29 @@ const typeDefs = gql`
     flavourTop: String!
     flavourMiddle: String!
     flavourBottom: String!
+    lollyPath: String!
   }
 
   type Mutation {
     createLolly (recipientName:String!, message: String!, senderName: String!,flavourTop: String!,flavourMiddle: String!,flavourBottom: String!): Lolly
   }
 `
-
+var client = new faunadb.Client({secret: "fnAD4yiiH-ACBRUTVFGw2j44LqP5B-0OKXQBpuYa"});
 const resolvers = {
   Query: {
     hello: () => {
       return 'Hello, world!'
     },
-    getLolly: ()=> {
+    getLolly: async (_,{lollyPath})=> {
+        console.log("Helo world = ", lollyPath);
+        var result = await client.query(
+          q.Get(q.Match(q.Index("lolly_by_path"),lollyPath))
+          
+        )
+        console.log("Lolly result get = ",result.data);
+        return result.data;
+
+        /*
       return {
         recipientName: "Shan",
         message: "this is message",
@@ -36,15 +47,15 @@ const resolvers = {
         flavourTop: "red",
         flavourMiddle: "blue",
         flavourBottom: "green"
-      }
+      }*/
     }
   },
   Mutation : {
     createLolly: async (_, lollyData)=>{
       console.log("on server = ", lollyData);
+      const uniquePath = shortid.generate();
+      lollyData.lollyPath = uniquePath;
       try {
-        
-        var client = new faunadb.Client({secret: "fnAD4yiiH-ACBRUTVFGw2j44LqP5B-0OKXQBpuYa"});
         var result = await client.query(
           q.Create(q.Collection("lollies"), {
             data: lollyData

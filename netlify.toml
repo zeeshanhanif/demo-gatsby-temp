@@ -1,4 +1,8 @@
 [build]
-    build="gatsby build"
+    command="gatsby build"
     publish= "public"
     functions="functions"
+
+[[redirects]]
+    from = "/showLolly/*"
+    to = "/showLolly?id=:splat"

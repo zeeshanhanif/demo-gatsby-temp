@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import { navigate } from "gatsby";
 import gql from 'graphql-tag';
 import React, { useRef, useState } from "react"
 import ReactDOM from 'react-dom'
@@ -23,6 +24,7 @@ const createLollyMutation = gql`
             flavourTop
             flavourMiddle
             flavourBottom
+            lollyPath
         }
     }
 `;
@@ -49,7 +51,9 @@ export default function NewLolly() {
                 flavourBottom: color3
             }
         })
-        console.log("result = ",result);
+        console.log("result = ",result.data.createLolly);
+        navigate(`/showLolly?id=${result.data.createLolly.lollyPath}`);
+
     }
   return (
       
