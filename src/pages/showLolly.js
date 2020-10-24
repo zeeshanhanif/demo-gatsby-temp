@@ -20,7 +20,9 @@ const GET_LOLLY = gql`
 `
 
 export default function ShowLolly() {
+    console.log("component started -- ");
     const id = useQueryParam("id","123");
+    
     console.log("id = ",id);
     const {loading, error, data} = useQuery(GET_LOLLY, {
         variables: {lollyPath: id}

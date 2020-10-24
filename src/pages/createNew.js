@@ -36,8 +36,8 @@ export default function NewLolly() {
     const recipientNameRef = useRef();
     const messageRef = useRef();
     const senderNameRef = useRef();
-    const {loading,error, data} = useQuery(GET_LOLLY);
-    console.log(data);
+    //const {loading,error, data} = useQuery(GET_LOLLY);
+    //console.log(data);
     const [createLolly] = useMutation(createLollyMutation);
     const createLollySubmit = async () => {
         console.log("recipientNameRef = ", recipientNameRef.current.value);

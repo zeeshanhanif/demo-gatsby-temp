@@ -3,6 +3,9 @@
     publish= "public"
     functions="functions"
 
+
+
 [[redirects]]
     from = "/showLolly/*"
     to = "/showLolly?id=:splat"
+
